@@ -12,31 +12,48 @@ export const AddTransactionForm = () => {
     const today = new Date();
     return today.toISOString().split("T")[0]; // formate YYY-MMM-DD
   });
-  const [type, setType] = useState("ingreso");
+  const [type, setType] = useState("Ingreso");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!text || !amount) return;
+    if (!text || !amount) {
+      toast.error("Debes completar descripcion y monto");
+      return;
+    }
+
+    const formattedAmount = parseFloat(amount.replace(/\./g, ""));
 
     const newTransaction = {
-      id: Date.now(),
       text,
       amount:
         type === "gasto"
-          ? -Math.abs(parseFloat(amount.replace(/\./g, "")))
-          : Math.abs(parseFloat(amount.replace(/\./g, ""))),
+          ? -Math.abs(formattedAmount)
+          : Math.abs(formattedAmount),
       category,
+      type,
       date,
     };
 
-    addTransaction(newTransaction);
+    setSubmitting(true);
 
-    setText("");
-    setAmount("");
-    setCategory("General");
-    setDate(new Date().toISOString().split("T")[0]);
-    toast.success("Transacción agregada correctamente ✅");
+    try {
+      await addTransaction(newTransaction);
+
+      setText("");
+      setAmount("");
+      setCategory("General");
+      setType("Ingreso");
+      setDate(new Date().toISOString().split("T")[0]);
+
+      toast.success("Transacción agregada correctamente");
+    } catch (error) {
+      toast.error("Ocurrió un error al agregar la transacción");
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -116,9 +133,20 @@ export const AddTransactionForm = () => {
       {/* Button submit */}
       <button
         type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition cursor-pointer w-full lg:w-1/3"
+        className="
+        bg-green-600 
+        text-white 
+        px-4 
+        py-2 
+        rounded 
+        hover:bg-green-700 
+        transition 
+        cursor-pointer 
+        w-full 
+        lg:w-1/3
+        disabled:opacity-50"
       >
-        Agregar Transacción
+        {submitting ? "Agregando..." : "Agregar Transacción"}
       </button>
     </form>
   );
