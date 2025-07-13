@@ -32,7 +32,7 @@ export const TransactionProvider = ({ children }) => {
           console.error("Error al cargar transacciones:", error.message);
           return;
         }
-        console.log({ data });
+
         setTransactions(data);
       } catch (err) {
         console.error("Error inesperado al cargar transacciones:", err.message);

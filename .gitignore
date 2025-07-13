@@ -12,8 +12,7 @@ dist
 dist-ssr
 *.local
 
-src/.env
-src/api/supabase.js
+.env
 
 # Editor directories and files
 .vscode/*
