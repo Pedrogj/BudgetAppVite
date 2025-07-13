@@ -1,9 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useTransactions } from "../context/TransactionContext";
+import { useAuth } from "../context/AuthContext";
 
 export const AddTransactionForm = () => {
   const { addTransaction } = useTransactions();
+  const { user } = useAuth();
 
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
@@ -34,6 +36,7 @@ export const AddTransactionForm = () => {
       category,
       type,
       date,
+      user_id: user.id,
     };
 
     setSubmitting(true);

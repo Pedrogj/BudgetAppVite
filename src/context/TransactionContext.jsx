@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../api/supabase";
+import { useAuth } from "./AuthContext";
 
 // context
 const TransactionContext = createContext();
@@ -12,14 +13,19 @@ export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { user } = useAuth();
+
   // Loading transactions from database
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
+        if (!user) return;
         setLoading(true);
+
         const { data, error } = await supabase
           .from("transactions")
           .select("*")
+          .eq("user_id", user.id)
           .order("date", { ascending: false });
 
         if (error) {
@@ -35,7 +41,7 @@ export const TransactionProvider = ({ children }) => {
       }
     };
     fetchTransactions();
-  }, []);
+  }, [user]);
 
   // Add transaction
   const addTransaction = async (transaction) => {
@@ -46,15 +52,16 @@ export const TransactionProvider = ({ children }) => {
         .select();
 
       if (error) {
-        console.log("Error al agregar transacción", error.message);
-        return;
+        console.error("Error al agregar transacción", error.message);
+        throw error;
       }
 
       if (data && data.length > 0) {
         setTransactions((prev) => [data[0], ...prev]);
       }
     } catch (err) {
-      console.log("Error inesperado al agregar transacción", err.message);
+      console.error("Error inesperado al agregar transacción", err.message);
+      throw err;
     }
   };
 
