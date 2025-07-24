@@ -78,13 +78,14 @@ export const AddTransactionForm = () => {
       <div>
         <label className="block mb-1 text-sm font-medium">Monto</label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
           value={amount}
           onChange={(e) => {
             const raw = e.target.value
               .replace(/\./g, "")
               .replace(/[^0-9\-]/g, "");
-            const formatted = parseInt(raw || "0").toLocaleString("es-CL");
+            const formatted = raw ? parseInt(raw).toLocaleString("es-CL") : "";
             setAmount(formatted);
           }}
           className="w-full border border-gray-300 rounded px-3 py-2"
