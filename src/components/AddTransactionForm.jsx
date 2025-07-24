@@ -10,10 +10,6 @@ export const AddTransactionForm = () => {
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("General");
-  const [date, setDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split("T")[0]; // formate YYY-MMM-DD
-  });
   const [type, setType] = useState("Ingreso");
   const [submitting, setSubmitting] = useState(false);
 
@@ -35,7 +31,7 @@ export const AddTransactionForm = () => {
           : Math.abs(formattedAmount),
       category,
       type,
-      date,
+      date: new Date().toISOString().split("T")[0],
       user_id: user.id,
     };
 
@@ -121,17 +117,6 @@ export const AddTransactionForm = () => {
           <option value="ingreso">Ingreso</option>
           <option value="gasto">Gasto</option>
         </select>
-      </div>
-
-      {/* Date */}
-      <div>
-        <label className="block mb-1 text-sm font-medium">Fecha</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
       </div>
 
       {/* Button submit */}
