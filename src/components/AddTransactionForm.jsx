@@ -13,6 +13,8 @@ export const AddTransactionForm = () => {
   const [type, setType] = useState("Ingreso");
   const [submitting, setSubmitting] = useState(false);
 
+  const disabledButton = !text || !amount;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -134,6 +136,7 @@ export const AddTransactionForm = () => {
         w-full 
         lg:w-1/3
         disabled:opacity-50"
+        disabled={disabledButton}
       >
         {submitting ? "Agregando..." : "Agregar Transacción"}
       </button>
