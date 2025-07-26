@@ -1,12 +1,12 @@
 import { AuthProvider } from "./context/AuthContext";
 import { TransactionProvider } from "./context/TransactionContext";
-import { AppContent } from "./components/layout/AppContent";
+import { AppRouter } from "./router/AppRouter";
 
 function App() {
   return (
     <AuthProvider>
       <TransactionProvider>
-        <AppContent />
+        <AppRouter />
       </TransactionProvider>
     </AuthProvider>
   );
