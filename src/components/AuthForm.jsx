@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
+
+import { useAuth } from "../context/AuthContext";
 
 export const AuthForm = () => {
   const { login, signup } = useAuth();
@@ -58,24 +60,26 @@ export const AuthForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
+          placeholder="example@correo.com"
         />
       </div>
       <div className="relative">
         <label className="block mb-1 text-sm font-medium">Contraseña</label>
         <input
           type={showPassword ? "text" : "password"}
-          className="w-full border border-gray-300 rounded px-3 py-2 pr-10"
+          className="w-full border border-gray-300 rounded px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={loading}
+          placeholder="123456"
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-blue-600"
+          className="absolute right-3 mt-2 cursor-pointer text-gray-500 hover:text-gray-700"
           tabIndex={-1}
         >
-          {showPassword ? "Ocultar" : "Ver"}
+          {showPassword ? <EyeOff size={25} /> : <Eye size={25} />}
         </button>
       </div>
       <button
