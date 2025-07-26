@@ -26,7 +26,7 @@ export const TransactionProvider = ({ children }) => {
           .from("transactions")
           .select("*")
           .eq("user_id", user.id)
-          .order("date", { ascending: false });
+          .order("created_at", { ascending: false });
 
         if (error) {
           console.error("Error al cargar transacciones:", error.message);

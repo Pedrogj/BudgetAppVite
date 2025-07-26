@@ -46,7 +46,6 @@ export const AddTransactionForm = () => {
       setAmount("");
       setCategory("General");
       setType("Ingreso");
-      setDate(new Date().toISOString().split("T")[0]);
 
       toast.success("Transacción agregada correctamente");
     } catch (error) {
