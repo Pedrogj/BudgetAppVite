@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 export const LogoutButton = () => {
@@ -8,7 +9,7 @@ export const LogoutButton = () => {
       onClick={logout}
       className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
     >
-      Cerrar sesión
+      <LogOut size={24} />
     </button>
   );
 };
