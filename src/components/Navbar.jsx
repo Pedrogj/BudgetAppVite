@@ -1,10 +1,58 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { LogoutButton } from "./layout/LogoutButton";
+import { Menu, X } from "lucide-react";
 
 export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
   return (
-    <nav className="bg-white shadow-md p-4 mb-6 rounded-xl flex justify-between items-center">
-      <h1 className="text-2xl font-bold text-gray-800">ADM App</h1>
-      <LogoutButton />
-    </nav>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+        <Link to="/" className="text-xl font-bold text-violet-800">
+          MyApp
+        </Link>
+        {/* Button Burger Mobile */}
+        <button
+          className="md:hidden text-gray-700 focus:outline-none"
+          onClick={toggleMenu}
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        {/* Menu Desktop */}
+        <nav className="hidden md:flex gap-6">
+          <Link to="/" className="hover:text-violet-800">
+            Inicio
+          </Link>
+          <Link to="/historial" className="hover:text-violet-800">
+            Historial
+          </Link>
+          <LogoutButton />
+        </nav>
+      </div>
+      {/* Menu Mobile */}
+      {isOpen && (
+        <nav className="md:hidden px-4 space-y-3 bg-white border-t pb-1.5 pt-1.5">
+          <Link
+            to="/"
+            onClick={toggleMenu}
+            className="block text-gray-700 hover:text-violet-800"
+          >
+            Inicio
+          </Link>
+          <Link
+            to="/historial"
+            onClick={toggleMenu}
+            className="block text-gray-700 hover:text-violet-800"
+          >
+            Historial
+          </Link>
+          <LogoutButton />
+        </nav>
+      )}
+    </header>
   );
 };
