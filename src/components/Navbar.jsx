@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { LogoutButton } from "./layout/LogoutButton";
-import { Menu, X } from "lucide-react";
+import { Menu, X, CircleDollarSign } from "lucide-react";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +12,11 @@ export const Navbar = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold text-violet-800">
+        <Link
+          to="/"
+          className="text-xl font-bold text-violet-800 flex items-center"
+        >
+          <CircleDollarSign size={24} />
           MyApp
         </Link>
         {/* Button Burger Mobile */}

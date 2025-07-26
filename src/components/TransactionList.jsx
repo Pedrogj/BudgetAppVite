@@ -7,7 +7,7 @@ export const TransactionList = () => {
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-4">Historial</h3>
+      <h3 className="text-lg font-semibold mb-4 text-gray-600">Historial</h3>
       <ul className="space-y-3">
         {transactions.map((transaction) => (
           <li

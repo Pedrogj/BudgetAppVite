@@ -58,7 +58,9 @@ export const AddTransactionForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-      <h3 className="text-lg font-semibold">Agregar Transacción</h3>
+      <h3 className="text-lg font-semibold text-gray-600">
+        Agregar Transacción
+      </h3>
 
       {/* description */}
       <div>
