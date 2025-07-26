@@ -3,6 +3,8 @@ import { useAuth } from "../context/AuthContext";
 
 import { LoginPage } from "../pages/LoginPage";
 import { DashboardPage } from "../pages/DashboardPage";
+import { HistoryTransactionsPage } from "../pages/HistoryTransactionsPage";
+import { LayoutAuthenticated } from "../components/layout/LayoutAuthenticated";
 
 export const AppRouter = () => {
   const { user, authLoading } = useAuth();
@@ -21,10 +23,14 @@ export const AppRouter = () => {
         path="login"
         element={user ? <Navigate to="/dashboard" /> : <LoginPage />}
       />
-      <Route
-        path="/dashboard"
-        element={user ? <DashboardPage /> : <Navigate to="/login" />}
-      />
+
+      {user && (
+        <Route element={<LayoutAuthenticated />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+
+          <Route path="/historial" element={<HistoryTransactionsPage />} />
+        </Route>
+      )}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
