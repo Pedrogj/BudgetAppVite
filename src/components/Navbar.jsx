@@ -39,7 +39,7 @@ export const Navbar = () => {
       </div>
       {/* Menu Mobile */}
       {isOpen && (
-        <nav className="md:hidden px-4 space-y-3 bg-white border-t pb-1.5 pt-1.5 z-50">
+        <nav className="md:hidden px-4 space-y-3 bg-white border-t pb-1.5 pt-1.5 z-50 relative">
           <Link
             to="/"
             onClick={toggleMenu}

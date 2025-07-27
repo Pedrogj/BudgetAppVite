@@ -8,7 +8,7 @@ export const LogoutButton = () => {
     <button
       type="button"
       onClick={logout}
-      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 cursor-pointer"
+      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 cursor-pointer z-50 relative"
     >
       <LogOut size={24} />
     </button>
