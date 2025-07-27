@@ -27,7 +27,7 @@ export const Navbar = () => {
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
         {/* Menu Desktop */}
-        <nav className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6">
           <Link to="/" className="hover:text-violet-800">
             Inicio
           </Link>
@@ -35,11 +35,11 @@ export const Navbar = () => {
             Historial
           </Link>
           <LogoutButton />
-        </nav>
+        </div>
       </div>
       {/* Menu Mobile */}
       {isOpen && (
-        <nav className="md:hidden px-4 space-y-3 bg-white border-t pb-1.5 pt-1.5 z-50 relative">
+        <div className="md:hidden px-4 space-y-3 bg-white border-t pb-1.5 pt-1.5 z-50 relative">
           <Link
             to="/"
             onClick={toggleMenu}
@@ -55,7 +55,7 @@ export const Navbar = () => {
             Historial
           </Link>
           <LogoutButton />
-        </nav>
+        </div>
       )}
     </header>
   );
