@@ -54,7 +54,7 @@ export const Navbar = () => {
           >
             Historial
           </Link>
-          <LogoutButton />
+          <LogoutButton onClick={toggleMenu} />
         </div>
       )}
     </header>
