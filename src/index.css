@@ -2,6 +2,14 @@
 
 /* Taildwind */
 
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0;

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useTransactions } from "../context/TransactionContext";
 
 export const TransactionList = () => {
-  const { transactions, deleteTransaction } = useTransactions();
   const [selectedId, setSelectedId] = useState(null); // ID de la transaccion a eliminar
+  const { transactions, deleteTransaction } = useTransactions();
 
   return (
     <div>

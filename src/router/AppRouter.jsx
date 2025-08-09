@@ -7,11 +7,7 @@ import { HistoryTransactionsPage } from "../pages/HistoryTransactionsPage";
 import { LayoutAuthenticated } from "../components/layout/LayoutAuthenticated";
 
 export const AppRouter = () => {
-  const { user, authLoading } = useAuth();
-
-  if (authLoading) {
-    return <div className="p4">Cargando sesion</div>;
-  }
+  const { user } = useAuth();
 
   return (
     <Routes>
