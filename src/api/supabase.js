@@ -1,9 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_CONFIG } from "./supabaseConfig";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+let supabaseUrl;
+let supabaseAnonKey;
 
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL_DEV;
-// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY_DEV;
+if (import.meta.env.MODE === "production") {
+  // supabase production
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+} else {
+  // supabase DEV
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL_DEV;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY_DEV;
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key);
