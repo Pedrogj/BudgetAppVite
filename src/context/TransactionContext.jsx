@@ -13,7 +13,7 @@ export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
 
   // Loading transactions from database
   useEffect(() => {
@@ -40,8 +40,10 @@ export const TransactionProvider = ({ children }) => {
         setLoading(false);
       }
     };
-    fetchTransactions();
-  }, [user]);
+    if (!authLoading && user) {
+      fetchTransactions();
+    }
+  }, [user, authLoading]);
 
   // Add transaction
   const addTransaction = async (transaction) => {
@@ -85,10 +87,6 @@ export const TransactionProvider = ({ children }) => {
       console.error("Error inesperado al eliminar transacción", err.message);
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactions));
-  }, [transactions]);
 
   return (
     <TransactionContext.Provider
