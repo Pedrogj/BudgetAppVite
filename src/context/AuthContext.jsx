@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../api/supabase";
+import { LoadingScreen } from "../components/LoadingScreen";
 
 const AuthContext = createContext();
 
@@ -45,11 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   // Global loader while session is being verified
   if (authLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

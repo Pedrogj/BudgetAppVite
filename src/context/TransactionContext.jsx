@@ -12,6 +12,7 @@ export const useTransactions = () => useContext(TransactionContext);
 export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   const { user, authLoading } = useAuth();
 
@@ -88,6 +89,31 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
+  const selectTransaction = async (id) => {
+    try {
+      let transaction = transactions.find(
+        (transactionId) => transactionId.id === id
+      );
+
+      if (!transaction) {
+        const { data, error } = await supabase
+          .from("transactions")
+          .select("*")
+          .eq("id", id)
+          .single();
+
+        if (error) throw new Error(error.message);
+
+        transaction = data;
+      }
+
+      setSelectedTransaction(transaction || null);
+    } catch (err) {
+      console.error("Error al cargar transacción:", error.message);
+      setSelectedTransaction(null);
+    }
+  };
+
   return (
     <TransactionContext.Provider
       value={{
@@ -95,6 +121,8 @@ export const TransactionProvider = ({ children }) => {
         addTransaction,
         deleteTransaction,
         loading,
+        selectedTransaction,
+        selectTransaction,
       }}
     >
       {children}

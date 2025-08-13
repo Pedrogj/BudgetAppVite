@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useTransactions } from "../context/TransactionContext";
 
 export const TransactionList = () => {
@@ -10,7 +11,8 @@ export const TransactionList = () => {
       <h3 className="text-lg font-semibold mb-4 text-gray-600">Historial</h3>
       <ul className="space-y-3">
         {transactions.map((transaction) => (
-          <li
+          <Link
+            to={`/transaction/${transaction.id}`}
             key={transaction.id}
             className={`flex justify-between items-center border-l-4 rounded-md shadow-sm p-3
               ${
@@ -44,7 +46,7 @@ export const TransactionList = () => {
                 Eliminar
               </button>
             </div>
-          </li>
+          </Link>
         ))}
       </ul>
 
