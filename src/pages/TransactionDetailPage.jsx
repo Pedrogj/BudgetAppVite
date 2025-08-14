@@ -21,7 +21,7 @@ export const TransactionDetailPage = () => {
   }
 
   return (
-    <div className="p-4 bg-white rounded shadow">
+    <div className="p-4 bg-white rounded shadow animate-fadeIn">
       <h2 className="text-xl font-bold mb-2">Detalle de transacción</h2>
 
       <div className="flex gap-2">
@@ -38,6 +38,10 @@ export const TransactionDetailPage = () => {
       <div className="flex gap-2">
         <p className="font-medium">Descripción:</p>
         <p>{selectedTransaction.text}</p>
+      </div>
+      <div className="flex gap-2">
+        <p className="font-medium">Categoría:</p>
+        <p>{selectedTransaction.category}</p>
       </div>
       <div className="flex gap-2">
         <p className="font-medium">Fecha:</p>

@@ -4,7 +4,7 @@ export const HistoryTransactionsPage = () => {
   const { transactions } = useTransactions();
 
   return (
-    <div className="max-w-3xl mx-auto py-4">
+    <div className="max-w-3xl mx-auto py-4 animate-fadeIn">
       <h1 className="text-lg font-bold mb-4 text-gray-600">
         Historial de Transacciones
       </h1>

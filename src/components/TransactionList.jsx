@@ -7,7 +7,7 @@ export const TransactionList = () => {
   const { transactions, deleteTransaction } = useTransactions();
 
   return (
-    <div>
+    <div className="animate-fadeIn">
       <h3 className="text-lg font-semibold mb-4 text-gray-600">Historial</h3>
       <ul className="space-y-3">
         {transactions.map((transaction) => (
