@@ -11,8 +11,7 @@ export const TransactionList = () => {
       <h3 className="text-lg font-semibold mb-4 text-gray-600">Historial</h3>
       <ul className="space-y-3">
         {transactions.map((transaction) => (
-          <Link
-            to={`/transaction/${transaction.id}`}
+          <div
             key={transaction.id}
             className={`flex justify-between items-center border-l-4 rounded-md shadow-sm p-3
               ${
@@ -21,14 +20,16 @@ export const TransactionList = () => {
                   : "border-red-500 bg-red-50"
               }`}
           >
-            <div className="flex flex-col">
-              <p className="sm:text-lg sm:font-medium text-xs">
-                {transaction.text}
-              </p>
-              <p className="sm:text-base text-xs text-center text-gray-600">
-                Fecha: {transaction.date}
-              </p>
-            </div>
+            <Link to={`/transaction/${transaction.id}`}>
+              <div className="flex flex-col">
+                <p className="sm:text-lg sm:font-medium text-xs">
+                  {transaction.text}
+                </p>
+                <p className="sm:text-base text-xs text-center text-gray-600">
+                  Fecha: {transaction.date}
+                </p>
+              </div>
+            </Link>
             <div className="flex items-center gap-2">
               <span
                 className={`text-xs sm:text-base ${
@@ -46,7 +47,7 @@ export const TransactionList = () => {
                 Eliminar
               </button>
             </div>
-          </Link>
+          </div>
         ))}
       </ul>
 

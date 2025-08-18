@@ -6,6 +6,7 @@ import { DashboardPage } from "../pages/DashboardPage";
 import { HistoryTransactionsPage } from "../pages/HistoryTransactionsPage";
 import { LayoutAuthenticated } from "../components/layout/LayoutAuthenticated";
 import { TransactionDetailPage } from "../pages/TransactionDetailPage";
+import { CategoryList } from "../components/CategoryList";
 
 export const AppRouter = () => {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ export const AppRouter = () => {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/transaction/:id" element={<TransactionDetailPage />} />
           <Route path="/historial" element={<HistoryTransactionsPage />} />
+          <Route path="/categorias" element={<CategoryList />} />
         </Route>
       )}
       <Route path="*" element={<Navigate to="/" />} />

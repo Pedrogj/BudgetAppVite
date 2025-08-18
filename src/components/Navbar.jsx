@@ -34,6 +34,9 @@ export const Navbar = () => {
           <Link to="/historial" className="hover:text-violet-800">
             Historial
           </Link>
+          <Link to="/categorias" className="hover:text-violet-800">
+            Categorías
+          </Link>
           <LogoutButton />
         </div>
       </div>
@@ -53,6 +56,13 @@ export const Navbar = () => {
             className="block text-gray-700 hover:text-violet-800"
           >
             Historial
+          </Link>
+          <Link
+            to="/categorias"
+            onClick={toggleMenu}
+            className="block text-gray-700 hover:text-violet-800"
+          >
+            Categorías
           </Link>
           <LogoutButton onClick={toggleMenu} />
         </div>

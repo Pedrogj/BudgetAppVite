@@ -4,26 +4,30 @@ import { useTransactions } from "../context/TransactionContext";
 import { useAuth } from "../context/AuthContext";
 
 export const AddTransactionForm = () => {
-  const { addTransaction } = useTransactions();
+  const { addTransaction, categories } = useTransactions();
   const { user } = useAuth();
 
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("General");
+  const [categoryName, setCategoryName] = useState("");
   const [type, setType] = useState("Ingreso");
   const [submitting, setSubmitting] = useState(false);
 
-  const disabledButton = !text || !amount;
+  const disabledButton = !text || !amount || !categoryName;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!text || !amount) {
+    if (disabledButton) {
       toast.error("Debes completar descripcion y monto");
       return;
     }
 
     const formattedAmount = parseFloat(amount.replace(/\./g, ""));
+
+    const date = new Date();
+    const dateLocal = date.toLocaleDateString("es-CL");
+    // console.log(dateLocal);
 
     const newTransaction = {
       text,
@@ -31,9 +35,9 @@ export const AddTransactionForm = () => {
         type === "gasto"
           ? -Math.abs(formattedAmount)
           : Math.abs(formattedAmount),
-      category,
+      category: categoryName,
       type,
-      date: new Date().toISOString().split("T")[0],
+      date: dateLocal,
       user_id: user.id,
     };
 
@@ -44,7 +48,7 @@ export const AddTransactionForm = () => {
 
       setText("");
       setAmount("");
-      setCategory("General");
+      setCategoryName("");
       setType("Ingreso");
 
       toast.success("Transacción agregada correctamente");
@@ -95,17 +99,16 @@ export const AddTransactionForm = () => {
       <div>
         <label className="block mb-1 text-sm font-medium">Categoría</label>
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
           className="w-full border border-gray-300 rounded px-3 py-2"
         >
-          <option value="General">General</option>
-          <option value="Trabajo">Trabajo</option>
-          <option value="Renta">Renta</option>
-          <option value="Comida">Comida</option>
-          <option value="Ocio">Ocio</option>
-          <option value="Compras">Compras</option>
-          <option value="Sueldo">Sueldo</option>
+          <option value="">Selecciona una Categoría</option>
+          {categories.map((categorie) => (
+            <option key={categorie.id} value={categorie.name}>
+              {categorie.name}
+            </option>
+          ))}
         </select>
       </div>
 

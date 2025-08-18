@@ -11,6 +11,7 @@ export const useTransactions = () => useContext(TransactionContext);
 // Provider
 export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
@@ -25,7 +26,7 @@ export const TransactionProvider = ({ children }) => {
 
         const { data, error } = await supabase
           .from("transactions")
-          .select("*")
+          .select(`*`)
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -109,10 +110,50 @@ export const TransactionProvider = ({ children }) => {
 
       setSelectedTransaction(transaction || null);
     } catch (err) {
-      console.error("Error al cargar transacción:", error.message);
+      console.error("Error al cargar transacción:", err.message);
       setSelectedTransaction(null);
     }
   };
+
+  // Get categories user
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setCategories(data);
+    } catch (err) {
+      console.error("Error al obtener categorias", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addCategory = async (name) => {
+    try {
+      const { data, error } = await supabase
+        .from("categories")
+        .insert([{ name, user_id: user.id }])
+        .select();
+
+      if (error) throw error;
+
+      // Actualizar estado local
+      setCategories((prev) => [...prev, ...data]);
+    } catch (err) {
+      console.error("Error al agregar categoría:", err.message);
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <TransactionContext.Provider
@@ -123,6 +164,9 @@ export const TransactionProvider = ({ children }) => {
         loading,
         selectedTransaction,
         selectTransaction,
+        categories,
+        addCategory,
+        fetchCategories,
       }}
     >
       {children}

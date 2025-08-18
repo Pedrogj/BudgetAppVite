@@ -25,7 +25,7 @@ export const HistoryTransactionsPage = () => {
                   {transaction.text}
                 </p>
                 <p className="sm:text-base text-xs text-center text-gray-600">
-                  {new Date(transaction.date).toLocaleDateString()}
+                  {transaction.date}
                 </p>
               </div>
               <span
