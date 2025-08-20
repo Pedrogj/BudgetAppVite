@@ -13,7 +13,7 @@ export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState([]);
 
   const { user, authLoading } = useAuth();
 
@@ -26,7 +26,7 @@ export const TransactionProvider = ({ children }) => {
 
         const { data, error } = await supabase
           .from("transactions")
-          .select(`*`)
+          .select(`*, categories (id, name)`)
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -99,7 +99,7 @@ export const TransactionProvider = ({ children }) => {
       if (!transaction) {
         const { data, error } = await supabase
           .from("transactions")
-          .select("*")
+          .select(`*, categories (name)`)
           .eq("id", id)
           .single();
 
@@ -108,7 +108,7 @@ export const TransactionProvider = ({ children }) => {
         transaction = data;
       }
 
-      setSelectedTransaction(transaction || null);
+      setSelectedTransaction(transaction || []);
     } catch (err) {
       console.error("Error al cargar transacción:", err.message);
       setSelectedTransaction(null);
@@ -126,7 +126,7 @@ export const TransactionProvider = ({ children }) => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setCategories(data);
+      setCategories(data || []);
     } catch (err) {
       console.error("Error al obtener categorias", err.message);
     } finally {
@@ -139,12 +139,13 @@ export const TransactionProvider = ({ children }) => {
       const { data, error } = await supabase
         .from("categories")
         .insert([{ name, user_id: user.id }])
-        .select();
+        .select()
+        .single();
 
       if (error) throw error;
 
-      // Actualizar estado local
       setCategories((prev) => [...prev, ...data]);
+      return data;
     } catch (err) {
       console.error("Error al agregar categoría:", err.message);
       throw err;
@@ -152,8 +153,8 @@ export const TransactionProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    if (user) fetchCategories();
+  }, [user]);
 
   return (
     <TransactionContext.Provider

@@ -4,6 +4,7 @@ import { useTransactions } from "../context/TransactionContext";
 export const CategoryList = () => {
   const [newCategory, setNewCategory] = useState("");
   const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const { categories, loading, addCategory } = useTransactions();
 
@@ -22,12 +23,15 @@ export const CategoryList = () => {
     if (!trimmedCategory) return;
 
     try {
+      setSubmitting(true);
       setError(null);
       await addCategory(trimmedCategory);
       setNewCategory("");
     } catch (err) {
       console.error("Error al agregar categoría:", err.message);
       setError("Error al agregar categoría. Intenta nuevamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -56,10 +60,14 @@ export const CategoryList = () => {
         />
         <button
           type="submit"
-          className="bg-violet-800 text-white px-4 py-2 rounded w-full lg:w-1/3 
-                     hover:bg-violet-700 transition cursor-pointer shadow-md"
+          className={`bg-violet-800 text-white px-4 py-2 rounded w-full lg:w-1/3 
+                     hover:bg-violet-700 transition cursor-pointer shadow-md ${
+                       !newCategory.trim() || submitting
+                         ? "opacity-50 cursor-not-allowed"
+                         : "hover:bg-violet-700"
+                     }`}
         >
-          Agregar
+          {submitting ? "Agregando..." : "Agregar"}
         </button>
       </form>
 

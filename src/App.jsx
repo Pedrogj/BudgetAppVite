@@ -1,14 +1,17 @@
 import { AuthProvider } from "./context/AuthContext";
+import { LoadingProvider } from "./context/LoadingContext";
 import { TransactionProvider } from "./context/TransactionContext";
 import { AppRouter } from "./router/AppRouter";
 
 function App() {
   return (
-    <AuthProvider>
-      <TransactionProvider>
-        <AppRouter />
-      </TransactionProvider>
-    </AuthProvider>
+    <LoadingProvider>
+      <AuthProvider>
+        <TransactionProvider>
+          <AppRouter />
+        </TransactionProvider>
+      </AuthProvider>
+    </LoadingProvider>
   );
 }
 

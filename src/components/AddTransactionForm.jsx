@@ -9,11 +9,11 @@ export const AddTransactionForm = () => {
 
   const [text, setText] = useState("");
   const [amount, setAmount] = useState("");
-  const [categoryName, setCategoryName] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [type, setType] = useState("Ingreso");
   const [submitting, setSubmitting] = useState(false);
 
-  const disabledButton = !text || !amount || !categoryName;
+  const disabledButton = !text || !amount || !categoryId;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +27,6 @@ export const AddTransactionForm = () => {
 
     const date = new Date();
     const dateLocal = date.toLocaleDateString("es-CL");
-    // console.log(dateLocal);
 
     const newTransaction = {
       text,
@@ -35,7 +34,7 @@ export const AddTransactionForm = () => {
         type === "gasto"
           ? -Math.abs(formattedAmount)
           : Math.abs(formattedAmount),
-      category: categoryName,
+      category_id: categoryId,
       type,
       date: dateLocal,
       user_id: user.id,
@@ -48,7 +47,7 @@ export const AddTransactionForm = () => {
 
       setText("");
       setAmount("");
-      setCategoryName("");
+      setCategoryId("");
       setType("Ingreso");
 
       toast.success("Transacción agregada correctamente");
@@ -99,13 +98,13 @@ export const AddTransactionForm = () => {
       <div>
         <label className="block mb-1 text-sm font-medium">Categoría</label>
         <select
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
           className="w-full border border-gray-300 rounded px-3 py-2"
         >
           <option value="">Selecciona una Categoría</option>
           {categories.map((categorie) => (
-            <option key={categorie.id} value={categorie.name}>
+            <option key={categorie.id} value={categorie.id}>
               {categorie.name}
             </option>
           ))}
