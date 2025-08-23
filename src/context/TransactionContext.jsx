@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../api/supabase";
+import toast from "react-hot-toast";
 import { useAuth } from "./AuthContext";
 
 // context
@@ -81,12 +82,14 @@ export const TransactionProvider = ({ children }) => {
 
       if (error) {
         console.error("Error al eliminar transacción:", error.message);
+        toast.error("Error al eliminar transacción");
         return;
       }
 
       setTransactions((transaction) =>
         transaction.filter((trc) => trc.id !== id)
       );
+      toast.success("Transacción eliminada correctamente");
     } catch (err) {
       console.error("Error inesperado al eliminar transacción", err.message);
     }
