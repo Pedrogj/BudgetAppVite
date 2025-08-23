@@ -7,21 +7,46 @@ export const AddTransactionForm = () => {
   const { addTransaction, categories } = useTransactions();
   const { user } = useAuth();
 
-  const [text, setText] = useState("");
-  const [amount, setAmount] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [type, setType] = useState("Ingreso");
-  const [submitting, setSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    text: "",
+    amount: "",
+    categoryId: "",
+    type: "",
+  });
 
-  const disabledButton = !text || !amount || !categoryId;
+  const { text, amount, categoryId, type } = form;
+
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name);
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!text.trim()) newErrors.text = "La descripcion es obligatoria.";
+    if (!amount || parseFloat(amount.replace(/\./g, "")) <= 0) {
+      newErrors.amount = "El monto debe ser mayor a 0.";
+    }
+    if (!categoryId) newErrors.categoryId = "Selecciona una categoría.";
+    if (!type) newErrors.type = "Selecciona un tipo de transacción";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (disabledButton) {
-      toast.error("Debes completar descripcion y monto");
-      return;
-    }
+    if (!validateForm()) return;
 
     const formattedAmount = parseFloat(amount.replace(/\./g, ""));
 
@@ -29,7 +54,7 @@ export const AddTransactionForm = () => {
     const dateLocal = date.toLocaleDateString("es-CL");
 
     const newTransaction = {
-      text,
+      text: text.trim(),
       amount:
         type === "gasto"
           ? -Math.abs(formattedAmount)
@@ -44,11 +69,8 @@ export const AddTransactionForm = () => {
 
     try {
       await addTransaction(newTransaction);
-
-      setText("");
-      setAmount("");
-      setCategoryId("");
-      setType("Ingreso");
+      setForm({ text: "", amount: "", categoryId: "", type: "" });
+      setErrors({});
 
       toast.success("Transacción agregada correctamente");
     } catch (error) {
@@ -66,83 +88,105 @@ export const AddTransactionForm = () => {
       </h3>
 
       {/* description */}
-      <div>
-        <label className="block mb-1 text-sm font-medium">Descripción</label>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
-      </div>
+      <InputField
+        label="Descripción"
+        name="text"
+        value={text}
+        onChange={handleChange}
+        error={errors.text}
+      />
 
       {/* amount */}
-      <div>
-        <label className="block mb-1 text-sm font-medium">Monto</label>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={amount}
-          onChange={(e) => {
-            const raw = e.target.value
-              .replace(/\./g, "")
-              .replace(/[^0-9\-]/g, "");
-            const formatted = raw ? parseInt(raw).toLocaleString("es-CL") : "";
-            setAmount(formatted);
-          }}
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        />
-      </div>
+      <InputField
+        label="Monto"
+        name="amount"
+        value={amount}
+        onChange={(e) => {
+          const raw = e.target.value
+            .replace(/\./g, "")
+            .replace(/[^0-9\-]/g, "");
+          setForm((prev) => ({
+            ...prev,
+            amount: raw ? parseInt(raw).toLocaleString("es-CL") : "",
+          }));
+        }}
+        error={errors.amount}
+      />
 
       {/* category */}
-      <div>
-        <label className="block mb-1 text-sm font-medium">Categoría</label>
-        <select
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        >
-          <option value="">Selecciona una Categoría</option>
-          {categories.map((categorie) => (
-            <option key={categorie.id} value={categorie.id}>
-              {categorie.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <SelectField
+        label="Categoría"
+        name="categoryId"
+        value={categoryId}
+        onChange={handleChange}
+        options={categories.map((category) => ({
+          value: category.id,
+          label: category.name,
+        }))}
+        error={errors.categoryId}
+      />
 
       {/* Type */}
-      <div>
-        <label className="block mb-1 text-sm font-medium">Tipo</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2"
-        >
-          <option value="ingreso">Ingreso</option>
-          <option value="gasto">Gasto</option>
-        </select>
-      </div>
+      <SelectField
+        label="Tipo"
+        name="type"
+        value={type}
+        onChange={handleChange}
+        options={[
+          { value: "ingreso", label: "Ingreso" },
+          { value: "gasto", label: "Gasto" },
+        ]}
+        error={errors.type}
+      />
 
       {/* Button submit */}
       <button
         type="submit"
-        className="
-        bg-violet-800 
-        text-white 
-        px-4 
-        py-2 
-        rounded 
-        hover:bg-violet-700 
-        transition 
-        cursor-pointer 
-        w-full 
-        lg:w-1/3
-        disabled:opacity-50"
-        disabled={disabledButton}
+        disabled={submitting}
+        className="bg-violet-800 text-white px-4 py-2 rounded hover:bg-violet-700 w-full lg:w-1/3 disabled:opacity-50 transition"
       >
         {submitting ? "Agregando..." : "Agregar Transacción"}
       </button>
     </form>
   );
 };
+
+const InputField = ({ label, name, value, onChange, error }) => (
+  <div>
+    <label className="block mb-1 text-sm font-medium">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full border rounded px-3 py-2 ${
+        error ? "border-red-500" : "border-gray-300"
+      }`}
+      aria-invalid={!!error}
+    />
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
+
+const SelectField = ({ label, name, value, onChange, options, error }) => (
+  <div>
+    <label className="block mb-1 text-sm font-medium">{label}</label>
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full border rounded px-3 py-2 ${
+        error ? "border-red-500" : "border-gray-300"
+      }`}
+      aria-invalid={!!error}
+    >
+      <option value="">{`Selecciona ${label}`}</option>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
