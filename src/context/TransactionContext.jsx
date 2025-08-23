@@ -18,34 +18,36 @@ export const TransactionProvider = ({ children }) => {
   const { user, authLoading } = useAuth();
 
   // Loading transactions from database
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        if (!user) return;
-        setLoading(true);
 
-        const { data, error } = await supabase
-          .from("transactions")
-          .select(`*, categories (id, name)`)
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
+  const fetchTransactions = async () => {
+    try {
+      if (!user) return;
+      setLoading(true);
 
-        if (error) {
-          console.error("Error al cargar transacciones:", error.message);
-          return;
-        }
+      const { data, error } = await supabase
+        .from("transactions")
+        .select(`*, categories (id, name)`)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
-        setTransactions(data);
-      } catch (err) {
-        console.error("Error inesperado al cargar transacciones:", err.message);
-      } finally {
-        setLoading(false);
+      if (error) {
+        console.error("Error al cargar transacciones:", error.message);
+        alert("No se pudieron cargar tus transacciones. Intenta de nuevo.");
+        return;
       }
-    };
-    if (!authLoading && user) {
-      fetchTransactions();
+
+      setTransactions(data);
+    } catch (err) {
+      console.error("Error inesperado al cargar transacciones:", err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [user, authLoading]);
+  };
+
+  useEffect(() => {
+    if (!user?.id) return;
+    fetchTransactions();
+  }, [user?.id]);
 
   // Add transaction
   const addTransaction = async (transaction) => {
@@ -53,7 +55,7 @@ export const TransactionProvider = ({ children }) => {
       const { data, error } = await supabase
         .from("transactions")
         .insert([transaction])
-        .select();
+        .select(`*, categories (id, name)`);
 
       if (error) {
         console.error("Error al agregar transacción", error.message);
@@ -99,16 +101,16 @@ export const TransactionProvider = ({ children }) => {
       if (!transaction) {
         const { data, error } = await supabase
           .from("transactions")
-          .select(`*, categories (name)`)
+          .select(`*, categories (id, name)`)
           .eq("id", id)
-          .single();
+          .maybeSingle();
 
         if (error) throw new Error(error.message);
 
         transaction = data;
       }
 
-      setSelectedTransaction(transaction || []);
+      setSelectedTransaction(transaction || null);
     } catch (err) {
       console.error("Error al cargar transacción:", err.message);
       setSelectedTransaction(null);
